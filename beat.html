@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloom Beauty - Premium Cosmetics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS */
+        :root {
+            --primary: #FF9A9E;
+            --secondary: #FAD0C4;
+            --dark: #2E2E2E;
+            --light: #FFF9F9;
+            --accent: #FFD6A5;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .hero-section {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            height: 500px;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width .3s;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .cart-item {
+            transition: all 0.3s ease;
+        }
+        
+        .cart-item:hover {
+            background-color: rgba(255, 154, 158, 0.1);
+        }
+        
+        /* Animation for add to cart */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <span class="text-2xl font-bold text-pink-500">Bloom Beauty</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-pink-500 transition duration-300">Home</a>
+                    <a href="#products" class="nav-link text-gray-700 hover:text-pink-500 transition duration-300">Products</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-pink-500 transition duration-300">About</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-pink-500 transition duration-300">Contact</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="cart-toggle" class="relative text-gray-700 hover:text-pink-500">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                    
+                    <button class="md:hidden text-gray-700 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden pb-4 px-6" id="mobile-menu">
+            <a href="#home" class="block py-2 text-gray-700 hover:text-pink-500">Home</a>
+            <a href="#products" class="block py-2 text-gray-700 hover:text-pink-500">Products</a>
+            <a href="#about" class="block py-2 text-gray-700 hover:text-pink-500">About</a>
+            <a href="#contact" class="block py-2 text-gray-700 hover:text-pink-500">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto">
+        <div class="p-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-semibold">Your Cart</h3>
+                <button id="close-cart" class="text-gray-500 hover:text-pink-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="cart-items" class="py-4">
+                <!-- Cart items will be displayed here -->
+                <p class="text-gray-500 text-center py-8">Your cart is empty</p>
+            </div>
+            
+            <div class="border-t pt-3">
+                <div class="flex justify-between mb-2">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal">$0.00</span>
+                </div>
+                <button class="w-full bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-600 transition duration-300">
+                    Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section flex items-center justify-center text-center">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Discover Your Beauty</h1>
+            <p class="text-xl text-white mb-8">Premium quality cosmetics with natural ingredients</p>
+            <a href="#products" class="bg-white text-pink-600 px-6 py-3 rounded-full font-medium hover:bg-opacity-90 transition duration-300">Shop Now</a>
+        </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Shop By Category</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="category-card bg-gray-50 rounded-lg overflow-hidden transition duration-300 hover:shadow-lg">
+                    <div class="h-40 bg-gradient-to-r from-pink-100 to-pink-200 flex items-center justify-center">
+                        <i class="fas fa-lipstick text-5xl text-pink-500"></i>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 class="font-medium mb-1">Makeup</h3>
+                        <a href="#" class="text-sm text-pink-500 hover:underline">Shop Now</a>
+                    </div>
+                </div>
+                
+                <div class="category-card bg-gray-50 rounded-lg overflow-hidden transition duration-300 hover:shadow-lg">
+                    <div class="h-40 bg-gradient-to-r from-purple-100 to-purple-200 flex items-center justify-center">
+                        <i class="fas fa-spa text-5xl text-purple-500"></i>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 class="font-medium mb-1">Skincare</h3>
+                        <a href="#" class="text-sm text-purple-500 hover:underline">Shop Now</a>
+                    </div>
+                </div>
+                
+                <div class="category-card bg-gray-50 rounded-lg overflow-hidden transition duration-300 hover:shadow-lg">
+                    <div class="h-40 bg-gradient-to-r from-blue-100 to-blue-200 flex items-center justify-center">
+                        <i class="fas fa-spray-can text-5xl text-blue-500"></i>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 class="font-medium mb-1">Fragrance</h3>
+                        <a href="#" class="text-sm text-blue-500 hover:underline">Shop Now</a>
+                    </div>
+                </div>
+                
+                <div class="category-card bg-gray-50 rounded-lg overflow-hidden transition duration-300 hover:shadow-lg">
+                    <div class="h-40 bg-gradient-to-r from-yellow-100 to-yellow-200 flex items-center justify-center">
+                        <i class="fas fa-pump-soap text-5xl text-yellow-500"></i>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 class="font-medium mb-1">Bath & Body</h3>
+                        <a href="#" class="text-sm text-yellow-500 hover:underline">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-4">Featured Products</h2>
+            <p class="text-center text-gray-600 mb-12">Discover our premium beauty collection</p>
+            
+            <div class="flex justify-center mb-8">
+                <div class="inline-flex rounded-md shadow-sm">
+                    <button class="px-4 py-2 text-sm font-medium rounded-l-lg bg-pink-500 text-white">
+                        All
+                    </button>
+                    <button class="px-4 py-2 text-sm font-medium bg-white">
+                        Makeup
+                    </button>
+                    <button class="px-4 py-2 text-sm font-medium bg-white">
+                        Skincare
+                    </button>
+                    <button class="px-4 py-2 text-sm font-medium bg-white">
+                        Haircare
+                    </button>
+                    <button class="px-4 py-2 text-sm font-medium rounded-r-lg bg-white">
+                        Fragrances
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Product 1 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2442cfa9-3cd2-4553-b359-27eb2fea5c1e.png" alt="Luxury makeup palette with various shades of pink and brown eyeshadows and blush" class="w-full h-64 object-cover">
+                        <div class="absolute top-0 left-0 bg-pink-500 text-white text-xs px-2 py-1 rounded-br-lg">New</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-1">Rose Gold Palette</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm ml-2">(42)</span>
+                        </div>
+                        <p class="text-gray-700 mb-3">Eyeshadow & blush palette with 12 shades</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-lg">$45.00</span>
+                            <button class="add-to-cart bg-pink-500 text-white px-3 py-1 rounded-full hover:bg-pink-600 transition duration-300" data-id="1" data-name="Rose Gold Palette" data-price="45.00">
+                                <i class="fas fa-plus"></i> Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f8ea947e-0ef4-4417-8b0d-06e314e13e74.png" alt="Blue glass bottle of luxury fragrance with gold cap and white label" class="w-full h-64 object-cover">
+                        <div class="absolute top-0 left-0 bg-purple-500 text-white text-xs px-2 py-1 rounded-br-lg">Bestseller</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-1">Silk Perfume</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm ml-2">(128)</span>
+                        </div>
+                        <p class="text-gray-700 mb-3">Floral fragrance with notes of jasmine</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-lg">$89.00</span>
+                            <button class="add-to-cart bg-pink-500 text-white px-3 py-1 rounded-full hover:bg-pink-600 transition duration-300" data-id="2" data-name="Silk Perfume" data-price="89.00">
+                                <i class="fas fa-plus"></i> Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/223c6297-92b0-4008-8f4e-6d2525bfa188.png" alt="Skincare serum bottle with dropper on marble surface with green leaves" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-1">Hydrating Serum</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm ml-2">(76)</span>
+                        </div>
+                        <p class="text-gray-700 mb-3">Deep hydration with hyaluronic acid</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-lg">$65.00</span>
+                            <button class="add-to-cart bg-pink-500 text-white px-3 py-1 rounded-full hover:bg-pink-600 transition duration-300" data-id="3" data-name="Hydrating Serum" data-price="65.00">
+                                <i class="fas fa-plus"></i> Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/99b295de-e5fc-4089-8931-158fcd1ffb88.png" alt="Lipstick collection in rose gold packaging arranged in circular pattern" class="w-full h-64 object-cover">
+                        <div class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-bl-lg">Sale</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-1">Matte Lipstick Set</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm ml-2">(54)</span>
+                        </div>
+                        <p class="text-gray-700 mb-3">Set of 5 long-lasting matte lipsticks</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-lg">$39.00</span>
+                                <span class="text-sm line-through text-gray-500 ml-2">$55.00</span>
+                            </div>
+                            <button class="add-to-cart bg-pink-500 text-white px-3 py-1 rounded-full hover:bg-pink-600 transition duration-300" data-id="4" data-name="Matte Lipstick Set" data-price="39.00">
+                                <i class="fas fa-plus"></i> Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="bg-white border border-pink-500 text-pink-500 px-6 py-3 rounded-full font-medium hover:bg-pink-500 hover:text-white transition duration-300">
+                    View All Products
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d2ced641-6b7a-4950-ab87-7befcc07cabd.png" alt="Portrait of smiling young woman with brown hair wearing pink top" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-semibold">Sarah Johnson</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"The hydrating serum changed my skin! After just two weeks, my complexion is glowing and soft. Worth every penny!"</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0513b1cd-fc53-4174-bd2b-bd2a773f838a.png" alt="Portrait of mature woman with blonde hair smiling showing perfect teeth" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-semibold">Emily Chen</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"I'm obsessed with the Rose Gold palette. The colors blend beautifully and last all day. Perfect for both day and night looks!"</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d00fbb89-635e-43d7-894d-f2f4760689a3.png" alt="Portrait of man with beard wearing glasses looking professional" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-semibold">Michael Rodriguez</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"Bought the Silk Perfume for my wife's anniversary. She loves it and gets compliments everywhere she goes!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-12">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9970a8a8-c82f-4143-bbcb-c4e07ee4c721.png" alt="Modern beauty store interior with pink accents, makeup displays and well-lit product shelves" class="rounded-lg shadow-lg w-full">
+                </div>
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl font-bold mb-6">About Bloom Beauty</h2>
+                    <p class="text-gray-700 mb-4">Founded in 2015, Bloom Beauty is committed to providing premium quality cosmetics and skincare products that enhance natural beauty while caring for your skin.</p>
+                    <p class="text-gray-700 mb-4">We carefully select high-performance ingredients backed by science, formulated without harmful chemicals, and tested for effectiveness.</p>
+                    <p class="text-gray-700 mb-6">Our mission is to empower individuals to feel confident in their own skin through clean, innovative beauty solutions that deliver real results.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="bg-white p-4 rounded-lg shadow-sm text-center w-32">
+                            <div class="text-pink-500 text-2xl mb-2">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h4 class="font-medium text-sm">Clean Beauty</h4>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm text-center w-32">
+                            <div class="text-pink-500 text-2xl mb-2">
+                                <i class="fas fa-broom"></i>
+                            </div>
+                            <h4 class="font-medium text-sm">Cruelty-Free</h4>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm text-center w-32">
+                            <div class="text-pink-500 text-2xl mb-2">
+                                <i class="fas fa-recycle"></i>
+                            </div>
+                            <h4 class="font-medium text-sm">Eco-Friendly</h4>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm text-center w-32">
+                            <div class="text-pink-500 text-2xl mb-2">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h4 class="font-medium text-sm">Science-Based</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-16 bg-gradient-to-r from-pink-100 to-purple-100">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-4">Join Our Beauty Community</h2>
+            <p class="text-gray-700 mb-8 max-w-2xl mx-auto">Subscribe to receive exclusive discounts, beauty tips, and early access to new products.</p>
+            
+            <div class="max-w-md mx-auto">
+                <div class="flex">
+                    <input type="email" placeholder="Your email address" class="flex-grow px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    <button class="bg-pink-500 text-white px-6 py-3 rounded-r-lg hover:bg-pink-600 transition duration-300">
+                        Subscribe
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">We respect your privacy. Unsubscribe at any time.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Contact Us</h2>
+            
+            <div class="flex flex-col md:flex-row gap-12">
+                <div class="md:w-1/2">
+                    <h3 class="text-xl font-semibold mb-4">Get in Touch</h3>
+                    <p class="text-gray-700 mb-6">Have questions about our products or need assistance with your order? Our team is here to help!</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="text-pink-500 mr-4 mt-1">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Address</h4>
+                                <p class="text-gray-600">123 Beauty Avenue, Cosmetic City, CA 90210</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-pink-500 mr-4 mt-1">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Phone</h4>
+                                <p class="text-gray-600">+1 (800) 555-1234</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-pink-500 mr-4 mt-1">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Email</h4>
+                                <p class="text-gray-600">hello@bloombeauty.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-pink-500 mr-4 mt-1">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Hours</h4>
+                                <p class="text-gray-600">Monday - Friday: 9AM - 6PM PST<br>
+                                Saturday: 10AM - 4PM PST</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <form class="bg-gray-50 p-6 rounded-lg">
+                        <div class="mb-4">
+                            <label for="name" class="block text-gray-700 mb-2">Name</label>
+                            <input type="text" id="name" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="subject" class="block text-gray-700 mb-2">Subject</label>
+                            <input type="text" id="subject" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="message" class="block text-gray-700 mb-2">Message</label>
+                            <textarea id="message" rows="4" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-pink-500"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-300 w-full">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Bloom Beauty</h3>
+                    <p class="text-gray-400">Premium beauty products crafted with care and passion.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Makeup</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Skincare</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Fragrance</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Bath & Body</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Customer Service</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Shipping & Returns</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Track Order</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                    <h5 class="font-medium mb-2">Payment Methods</h5>
+                    <div class="flex space-x-2">
+                        <i class="fab fa-cc-visa text-xl"></i>
+                        <i class="fab fa-cc-mastercard text-xl"></i>
+                        <i class="fab fa-cc-amex text-xl"></i>
+                        <i class="fab fa-cc-paypal text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 Bloom Beauty. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 text-sm">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Document Ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.querySelector('nav button.md\\:hidden');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Cart Functionality
+            const cartToggle = document.getElementById('cart-toggle');
+            const closeCart = document.getElementById('close-cart');
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCountElement = document.getElementById('cart-count');
+            const cartSubtotalElement = document.getElementById('cart-subtotal');
+            
+            let cart = [];
+            
+            // Toggle Cart Sidebar
+            cartToggle.addEventListener('click', function() {
+                cartSidebar.classList.toggle('translate-x-full');
+                document.body.classList.toggle('overflow-hidden');
+            });
+            
+            closeCart.addEventListener('click', function() {
+                cartSidebar.classList.add('translate-x-full');
+                document.body.classList.remove('overflow-hidden');
+            });
+            
+            // Add to Cart
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const price = parseFloat(this.getAttribute('data-price'));
+                    
+                    // Add pulse animation
+                    this.classList.add('pulse');
+                    setTimeout(() => {
+                        this.classList.remove('pulse');
+                    }, 500);
+                    
+                    // Check if item already in cart
+                    const existingItem = cart.find(item => item.id === id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        cart.push({
+                            id,
+                            name,
+                            price,
+                            quantity: 1
+                        });
+                    }
+                    
+                    updateCart();
+                });
+            });
+            
+            // Update Cart Display
+            function updateCart() {
+                // Update cart count
+                const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+                cartCountElement.textContent = totalItems;
+                
+                // Update cart items
+                cartItemsContainer.innerHTML = '';
+                
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Your cart is empty</p>';
+                    cartSubtotalElement.textContent = '$0.00';
+                    return;
+                }
+                
+                let subtotal = 0;
+                
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    subtotal += itemTotal;
+                    
+                    const cartItemElement = document.createElement('div');
+                    cartItemElement.className = 'cart-item flex justify-between items-center mb-4 pb-4 border-b';
+                    cartItemElement.innerHTML = `
+                        <div>
+                            <h4 class="font-medium">${item.name}</h4>
+                            <p class="text-gray-500 text-sm">$${item.price.toFixed(2)} x ${item.quantity}</p>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="font-medium mr-4">$${itemTotal.toFixed(2)}</span>
+                            <div class="flex items-center space-x-2">
+                                <button class="decrease-quantity text-gray-500 hover:text-pink-500" data-id="${item.id}">
+                                    <i class="fas fa-minus text-xs"></i>
+                                </button>
+                                <span>${item.quantity}</span>
+                                <button class="increase-quantity text-gray-500 hover:text-pink-500" data-id="${item.id}">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                            <button class="remove-item ml-4 text-gray-400 hover:text-red-500" data-id="${item.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    cartItemsContainer.appendChild(cartItemElement);
+                });
+                
+                // Update subtotal
+                cartSubtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+                
+                // Add event listeners to quantity buttons
+                document.querySelectorAll('.increase-quantity').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const item = cart.find(item => item.id === id);
+                        if (item) {
+                            item.quantity += 1;
+                            updateCart();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.decrease-quantity').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const item = cart.find(item => item.id === id);
+                        if (item && item.quantity > 1) {
+                            item.quantity -= 1;
+                            updateCart();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.remove-item').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        cart = cart.filter(item => item.id !== id);
+                        updateCart();
+                    });
+                });
+            }
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+            
+            // Form submission
+            const contactForm = document.querySelector('form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Thank you for your message! We will get back to you soon.');
+                    this.reset();
+                });
+            }
+            
+            // Newsletter form submission
+            const newsletterForm = document.querySelector('section.bg-gradient-to-r form');
+            if (newsletterForm) {
+                newsletterForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const emailInput = this.querySelector('input[type="email"]');
+                    alert(`Thank you for subscribing with ${emailInput.value}! You'll receive our beauty tips soon.`);
+                    emailInput.value = '';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
